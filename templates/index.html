@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance & Placement Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+    <!-- ============================= -->
+    <!-- Dashboard Heading -->
+    <!-- ============================= -->
+
+    <h1>Student Performance & Placement Dashboard</h1>
+
+    <p class="subtitle">
+        Analysis of student academic and placement data
+    </p>
+
+
+    <!-- ============================= -->
+    <!-- Dashboard Statistics -->
+    <!-- ============================= -->
+
+    <div class="dashboard">
+
+        <div class="card">
+
+            <h3>Total Students</h3>
+
+            <p>{{ total_students }}</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Placed Students</h3>
+
+            <p>{{ placed_students }}</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Placement Rate</h3>
+
+            <p>{{ placement_rate }}%</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Filtered Students</h3>
+
+            <p>{{ filtered_students }}</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Placement Chart -->
+    <!-- ============================= -->
+
+    <div class="chart">
+
+        <h2>Placement Status</h2>
+
+        <img
+            src="{{ url_for('static',
+            filename='placement_status.png') }}"
+            alt="Placement Status Chart"
+        >
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- CGPA Chart -->
+    <!-- ============================= -->
+
+    <div class="chart">
+
+        <h2>CGPA vs Placement</h2>
+
+        <img
+            src="{{ url_for('static',
+            filename='cgpa_placement.png') }}"
+            alt="CGPA vs Placement Chart"
+        >
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Internship Chart -->
+    <!-- ============================= -->
+
+    <div class="chart">
+
+        <h2>Internship Experience vs Placement</h2>
+
+        <img
+            src="{{ url_for('static',
+            filename='internship_placement.png') }}"
+            alt="Internship vs Placement Chart"
+        >
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Projects Chart -->
+    <!-- ============================= -->
+
+    <div class="chart">
+
+        <h2>Projects Completed vs Placement</h2>
+
+        <img
+            src="{{ url_for('static',
+            filename='projects_placement.png') }}"
+            alt="Projects vs Placement Chart"
+        >
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Communication Chart -->
+    <!-- ============================= -->
+
+    <div class="chart">
+
+        <h2>Communication Skills vs Placement</h2>
+
+        <img
+            src="{{ url_for('static',
+            filename='communication_placement.png') }}"
+            alt="Communication Skills vs Placement Chart"
+        >
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Filters -->
+    <!-- ============================= -->
+
+    <div class="filter-container">
+
+        <h2>Student Records</h2>
+
+
+        <form method="GET" action="/">
+
+
+            <!-- Placement Filter -->
+
+            <label for="placement">
+                Placement Status:
+            </label>
+
+            <select
+                name="placement"
+                id="placement"
+            >
+
+                <option
+                    value="All"
+                    {% if placement_filter == "All" %}
+                    selected
+                    {% endif %}
+                >
+                    All Students
+                </option>
+
+
+                <option
+                    value="Yes"
+                    {% if placement_filter == "Yes" %}
+                    selected
+                    {% endif %}
+                >
+                    Placed Students
+                </option>
+
+
+                <option
+                    value="No"
+                    {% if placement_filter == "No" %}
+                    selected
+                    {% endif %}
+                >
+                    Not Placed Students
+                </option>
+
+            </select>
+
+
+            <!-- Minimum CGPA Filter -->
+
+            <label for="min_cgpa">
+                Minimum CGPA:
+            </label>
+
+            <input
+                type="number"
+                name="min_cgpa"
+                id="min_cgpa"
+                step="0.1"
+                min="0"
+                max="10"
+                placeholder="e.g. 8"
+                value="{{ min_cgpa }}"
+            >
+
+
+            <!-- Internship Filter -->
+
+            <label for="internship">
+                Internship:
+            </label>
+
+            <select
+                name="internship"
+                id="internship"
+            >
+
+                <option
+                    value="All"
+                    {% if internship_filter == "All" %}
+                    selected
+                    {% endif %}
+                >
+                    All
+                </option>
+
+
+                <option
+                    value="Yes"
+                    {% if internship_filter == "Yes" %}
+                    selected
+                    {% endif %}
+                >
+                    Internship Yes
+                </option>
+
+
+                <option
+                    value="No"
+                    {% if internship_filter == "No" %}
+                    selected
+                    {% endif %}
+                >
+                    Internship No
+                </option>
+
+            </select>
+            <label for="min_projects">
+                Minimum Projects:
+            </label>
+
+            <input
+              type="number"
+              name="min_projects"
+              id="min_projects"
+              min="0"
+              placeholder="e.g. 2"
+              value="{{ min_projects }}"
+>
+
+            <!-- Filter Button -->
+
+            <button type="submit">
+                Filter
+            </button>
+
+            <a href="/" class="reset-button">
+                Reset Filters
+            </a>
+        </form>
+
+    </div>
+
+
+    <!-- ============================= -->
+    <!-- Student Records Table -->
+    <!-- ============================= -->
+
+    <div class="table-container">
+
+        <h2>Student Records</h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>College ID</th>
+
+                    <th>CGPA</th>
+
+                    <th>Internship</th>
+
+                    <th>Projects</th>
+
+                    <th>Communication</th>
+
+                    <th>Placement</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% if students %}
+
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>{{ student[0] }}</td>
+
+                        <td>{{ student[1] }}</td>
+
+                        <td>{{ student[2] }}</td>
+
+                        <td>{{ student[3] }}</td>
+
+                        <td>{{ student[4] }}</td>
+
+                        <td>
+
+                       {% if student[5] == "Yes" %}
+
+                       <span class="status placed">
+                          Placed
+                       </span>
+
+                       {% else %}
+
+                       <span class="status not-placed">
+                          Not Placed
+                       </span>
+
+                       {% endif %}
+
+                    </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="no-data"
+                        >
+                            No students found for the selected filters.
+                        </td>
+
+                    </tr>
+
+
+                {% endif %}
+
+
+            </tbody>
+
+        </table>
+        <!-- Pagination -->
+
+<div class="pagination">
+
+    {% if page > 1 %}
+
+        <a href="?page={{ page - 1 }}&placement={{ placement_filter }}&min_cgpa={{ min_cgpa }}&internship={{ internship_filter }}&min_projects={{ min_projects }}&college_id={{ college_id }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+
+    <span>
+        Page {{ page }}
+    </span>
+
+
+    {% if filtered_students > page * per_page %}
+
+        <a href="?page={{ page + 1 }}&placement={{ placement_filter }}&min_cgpa={{ min_cgpa }}&internship={{ internship_filter }}&min_projects={{ min_projects }}&college_id={{ college_id }}">
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+    </div>
+
+
+</body>
+
+</html>
