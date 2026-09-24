@@ -7,5 +7,3 @@ env/
 myvenv/
 
 .vscode/
-
-*.db
