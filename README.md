@@ -2,6 +2,10 @@
 
 A web-based dashboard for analyzing student academic performance and placement data.
 
+## Live Demo
+
+[Open Live Dashboard](https://student-performance-placement-dashboard.onrender.com)
+
 ## Project Overview
 
 This project analyzes student academic and placement-related data and presents useful insights through an interactive web dashboard.
